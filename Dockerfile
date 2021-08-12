@@ -9,6 +9,7 @@ from ros:melodic
 # ros-melodic-rviz
 RUN apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
+		ros-melodic-desktop-full \
 		ros-melodic-controller-interface ros-melodic-gazebo-ros-control \
 		ros-melodic-joint-state-controller ros-melodic-effort-controllers \
 		ros-melodic-joint-trajectory-controller ros-melodic-robot \
@@ -48,9 +49,9 @@ RUN echo "#!/bin/bash" > unitree_entrypoint.bash \
 	&& echo "set -e\n" >> unitree_entrypoint.bash \
 	&& echo "source '/opt/ros/$ROS_DISTRO/setup.bash'" >> unitree_entrypoint.bash \
 	&& echo "source /usr/share/gazebo-9/setup.sh" >> unitree_entrypoint.bash \
-	&& echo "export ROS_PACKAGE_PATH=~/catkin_ws:\${ROS_PACKAGE_PATH}" >> unitree_entrypoint.bash \
-	&& echo "export GAZEBO_PLUGIN_PATH=~/catkin_ws/devel/lib:\${GAZEBO_PLUGIN_PATH}" >> unitree_entrypoint.bash \
-	&& echo "export LD_LIBRARY_PATH=~/catkin_ws/devel/lib:/usr/local/lib:\${LD_LIBRARY_PATH}" >> unitree_entrypoint.bash \
+	&& echo "export ROS_PACKAGE_PATH=/root/catkin_ws:\${ROS_PACKAGE_PATH}" >> unitree_entrypoint.bash \
+	&& echo "export GAZEBO_PLUGIN_PATH=/root/catkin_ws/devel/lib:\${GAZEBO_PLUGIN_PATH}" >> unitree_entrypoint.bash \
+	&& echo "export LD_LIBRARY_PATH=/root/catkin_ws/devel/lib:/usr/local/lib:\${LD_LIBRARY_PATH}" >> unitree_entrypoint.bash \
 	&& echo "export UNITREE_SDK_VERSION=3_2" >> unitree_entrypoint.bash \
 	&& echo "export UNITREE_LEGGED_SDK_PATH='${PWD}unitree_legged_sdk'" >> unitree_entrypoint.bash \
 	&& echo "export ROS_IP='127.0.0.1'" >> unitree_entrypoint.bash \
@@ -65,18 +66,18 @@ RUN echo "#!/bin/bash" > unitree_entrypoint.bash \
 	&& chmod +x unitree_entrypoint.bash
 
 # Setup workspace and unitree_ros
-RUN mkdir -p ~/catkin_ws/src/ \
-	&& cd ~/catkin_ws/src/ \
+RUN mkdir -p /root/catkin_ws/src/ \
+	&& cd /root/catkin_ws/src/ \
 	&& git clone https://github.com/unitreerobotics/unitree_ros.git \
 	&& cd unitree_ros \
 	&& sed -i "s|/home/[^/]\+/|$HOME/|g" unitree_gazebo/worlds/stairs.world \
-	&& cd ~/catkin_ws \
+	&& cd /root/catkin_ws \
 	&& bash  \
 	&& /unitree_entrypoint.bash catkin_make
 
 # Setup stage 2 entrypoint
 RUN echo "#!/bin/bash" >> entry2.bash \
-	&& echo "source ~/catkin_ws/devel/setup.bash" >> entry2.bash \
+	&& echo "source /root/catkin_ws/devel/setup.bash" >> entry2.bash \
 	&& echo "exec \$@" >> entry2.bash \
 	&& chmod +x entry2.bash
 
