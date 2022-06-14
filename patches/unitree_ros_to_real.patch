@@ -1,0 +1,108 @@
+diff --git a/unitree_legged_real/CMakeLists.txt b/unitree_legged_real/CMakeLists.txt
+index 9c91639..867cc12 100755
+--- a/unitree_legged_real/CMakeLists.txt
++++ b/unitree_legged_real/CMakeLists.txt
+@@ -7,9 +7,16 @@ find_package(catkin REQUIRED COMPONENTS
+     roscpp
+     geometry_msgs
+     unitree_legged_msgs
++	unitree_legged_sdk
+ )
+ 
+-catkin_package()
++catkin_package(
++	CATKIN_DEPENDS
++	roscpp
++	geometry_msgs
++	unitree_legged_msgs
++	unitree_legged_sdk
++)
+ 
+ include_directories(
+     include
+@@ -17,11 +24,7 @@ include_directories(
+     ${catkin_INCLUDE_DIRS}
+ )
+ 
+-set(CMAKE_CXX_FLAGS "-O3")
+-
+ if( $ENV{UNITREE_SDK_VERSION} STREQUAL "3_1")
+-    include_directories($ENV{ALIENGO_SDK_PATH}/include)
+-    link_directories($ENV{ALIENGO_SDK_PATH}/lib)
+     string(CONCAT LEGGED_SDK_NAME libaliengo_comm.so)
+     set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
+ 
+@@ -32,16 +35,8 @@ if( $ENV{UNITREE_SDK_VERSION} STREQUAL "3_1")
+     add_dependencies(lcm_server_3_1 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ 
+ elseif( $ENV{UNITREE_SDK_VERSION} STREQUAL "3_2")
+-    include_directories($ENV{UNITREE_LEGGED_SDK_PATH}/include)
+-    link_directories($ENV{UNITREE_LEGGED_SDK_PATH}/lib)
+-    string(CONCAT LEGGED_SDK_NAME libunitree_legged_sdk_$ENV{UNITREE_PLATFORM}.so)
+-    set(EXTRA_LIBS ${LEGGED_SDK_NAME} lcm)
+-
++	#set(EXTRA_LIBS unitree_legged_sdk lcm)
+     add_definitions(-DSDK3_2)
+-
+-    add_executable(lcm_server_3_2 $ENV{UNITREE_LEGGED_SDK_PATH}/examples/lcm_server.cpp)
+-    target_link_libraries(lcm_server_3_2 ${EXTRA_LIBS} ${catkin_LIBRARIES})
+-    add_dependencies(lcm_server_3_2 ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+ endif()
+ 
+ add_executable(position_lcm src/exe/position_mode.cpp)
+@@ -58,4 +53,10 @@ add_dependencies(torque_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTE
+ 
+ add_executable(walk_lcm src/exe/walk_mode.cpp)
+ target_link_libraries(walk_lcm ${EXTRA_LIBS} ${catkin_LIBRARIES})
+-add_dependencies(walk_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
+\ No newline at end of file
++add_dependencies(walk_lcm ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
++
++install(TARGETS ${targets}
++  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
++)
+diff --git a/unitree_legged_real/include/convert.h b/unitree_legged_real/include/convert.h
+index 833b29b..0e0b4d0 100755
+--- a/unitree_legged_real/include/convert.h
++++ b/unitree_legged_real/include/convert.h
+@@ -164,7 +164,7 @@ aliengo::HighCmd ToLcm(unitree_legged_msgs::HighCmd& ros, aliengo::HighCmd lcmTy
+ #endif
+ 
+ #ifdef SDK3_2
+-#include "unitree_legged_sdk/unitree_legged_sdk.h"
++#include <unitree_legged_sdk/unitree_legged_sdk.h>
+ 
+ unitree_legged_msgs::IMU ToRos(UNITREE_LEGGED_SDK::IMU& lcm)
+ {
+@@ -335,4 +335,4 @@ UNITREE_LEGGED_SDK::HighCmd ToLcm(unitree_legged_msgs::HighCmd& ros, UNITREE_LEG
+ }
+ #endif
+ 
+-#endif  // _CONVERT_H_
+\ No newline at end of file
++#endif  // _CONVERT_H_
+diff --git a/unitree_legged_real/package.xml b/unitree_legged_real/package.xml
+index 68c09e5..8c39503 100644
+--- a/unitree_legged_real/package.xml
++++ b/unitree_legged_real/package.xml
+@@ -8,13 +8,16 @@
+   <license>TODO</license>
+ 
+   <buildtool_depend>catkin</buildtool_depend>
++  <build_depend>unitree_legged_sdk</build_depend>
+   <build_depend>roscpp</build_depend>
+   <build_depend>std_msgs</build_depend>
+   <build_export_depend>roscpp</build_export_depend>
+   <build_export_depend>std_msgs</build_export_depend>
+   <exec_depend>roscpp</exec_depend>
+   <exec_depend>std_msgs</exec_depend>
++  <exec_depend>unitree_legged_sdk</exec_depend>
+   <depend>unitree_legged_msgs</depend>
++  <depend>geometry_msgs</depend>
+   <depend>eigen</depend>
+ 
+-</package>
+\ No newline at end of file
++</package>

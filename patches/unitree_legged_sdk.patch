@@ -1,0 +1,119 @@
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index 24b9c50..50103e0 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
+@@ -1,46 +1,93 @@
+ cmake_minimum_required(VERSION 2.8.3)
+ project(unitree_legged_sdk)
+ 
+-include_directories(include)
++find_package(catkin)
++catkin_package(
++   INCLUDE_DIRS include
++   LIBRARIES unitree_legged_sdk lcm
++)
+ 
+-link_directories(lib)
++include_directories(
++	include
++    ${catkin_INCLUDE_DIRS}
++)
+ 
+ add_compile_options(-std=c++11)
+ 
+-set(EXTRA_LIBS -pthread libunitree_legged_sdk_amd64.so lcm)
++if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
++	set(ARCH amd64)
++else()
++	set(ARCH arm64)
++endif()
++
++add_library(unitree_legged_sdk SHARED IMPORTED GLOBAL)
++
++set_target_properties(unitree_legged_sdk
++	PROPERTIES
++	IMPORTED_LOCATION "${CMAKE_CURRENT_SOURCE_DIR}/lib/libunitree_legged_sdk_${ARCH}.so"
++)
++
++set(EXTRA_LIBS -pthread unitree_legged_sdk lcm)
+ 
+ set(CMAKE_CXX_FLAGS "-O3")
+ 
+ # one pc one process
+ add_executable(example_position examples/example_position.cpp)
+ target_link_libraries(example_position ${EXTRA_LIBS})
++set(targets example_position)
+ 
+ add_executable(example_velocity examples/example_velocity.cpp)
+ target_link_libraries(example_velocity ${EXTRA_LIBS})
++list(APPEND targets example_velocity)
+ 
+ add_executable(example_torque examples/example_torque.cpp)
+ target_link_libraries(example_torque ${EXTRA_LIBS})
++list(APPEND targets example_torque)
+ 
+ add_executable(example_walk examples/example_walk.cpp)
+ target_link_libraries(example_walk ${EXTRA_LIBS})
++list(APPEND targets example_walk)
+ 
+ add_executable(example_wirelessHandle examples/example_wirelessHandle.cpp)
+ target_link_libraries(example_wirelessHandle ${EXTRA_LIBS})
++list(APPEND targets example_wirelessHandle)
+ 
+ # one pc multi process
+ add_executable(lcm_server_high examples/lcm_server_high.cpp)
+ target_link_libraries(lcm_server_high ${EXTRA_LIBS})
++list(APPEND targets lcm_server_high)
+ 
+ add_executable(lcm_server_low examples/lcm_server_low.cpp)
+ target_link_libraries(lcm_server_low ${EXTRA_LIBS})
++list(APPEND targets lcm_server_low)
+ 
+ # multi pc
+ add_executable(udp_send_test examples/multi_pc_udp_send.cpp)
+ target_link_libraries(udp_send_test ${EXTRA_LIBS})
++list(APPEND targets udp_send_test)
+ 
+ add_executable(udp_recv_test examples/multi_pc_udp_recv.cpp)
+ target_link_libraries(udp_recv_test ${EXTRA_LIBS})
++list(APPEND targets udp_recv_test)
+ 
+ # lcm server
+ add_executable(lcm_server examples/lcm_server.cpp)
+ target_link_libraries(lcm_server ${EXTRA_LIBS})
++list(APPEND targets lcm_server)
++
++install(FILES lib/libunitree_legged_sdk_${ARCH}.so
++	DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}"
++	RENAME libunitree_legged_sdk.so
++)
++
++install(TARGETS ${targets}
++  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
++)
++
++install(DIRECTORY include/${PROJECT_NAME}/
++  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
++  FILES_MATCHING PATTERN "*.h"
++)
++
+diff --git a/package.xml b/package.xml
+new file mode 100644
+index 0000000..6b82690
+--- /dev/null
++++ b/package.xml
+@@ -0,0 +1,12 @@
++<?xml version="1.0"?>
++<package format="2">
++  <name>unitree_legged_sdk</name>
++  <version>0.0.0</version>
++  <description>The unitree_legged_sdk package</description>
++
++  <maintainer email="laikago@unitree.cc">unitree</maintainer>
++  <license>TODO</license>
++
++  <buildtool_depend>catkin</buildtool_depend>
++
++</package>

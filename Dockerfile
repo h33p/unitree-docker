@@ -20,29 +20,8 @@ RUN apt-get update \
 # Install other dependencies
 RUN apt-get update \
 	&& apt-get install --no-install-recommends --no-install-suggests -y \
-		curl unzip git \
+		curl unzip git liblcm-dev \
 	&& rm -rf /var/lib/apt/lists/*
-
-# Install LCM
-RUN curl -L https://github.com/lcm-proj/lcm/releases/download/v1.4.0/lcm-1.4.0.zip > lcm-1.4.0.zip \
-	&& unzip lcm-1.4.0.zip \
-	&& cd lcm-1.4.0 \
-	&& mkdir build \
-	&& cd build \
-	&& cmake ../ \
-	&& make \
-	&& make install \
-	&& cd ../../ \
-	&& rm -rf lcm-1.4.0 \
-	&& rm lcm-1.4.0.zip
-
-# Build unitree_legged_sdk
-RUN git clone https://github.com/unitreerobotics/unitree_legged_sdk.git \
-	&& cd unitree_legged_sdk \
-	&& mkdir build \
-	&& cd build \
-	&& cmake ../ \
-	&& make
 
 # Setup stage 1 entrypoint
 RUN echo "#!/bin/bash" > unitree_entrypoint.bash \
@@ -53,26 +32,36 @@ RUN echo "#!/bin/bash" > unitree_entrypoint.bash \
 	&& echo "export GAZEBO_PLUGIN_PATH=/root/catkin_ws/devel/lib:\${GAZEBO_PLUGIN_PATH}" >> unitree_entrypoint.bash \
 	&& echo "export LD_LIBRARY_PATH=/root/catkin_ws/devel/lib:/usr/local/lib:\${LD_LIBRARY_PATH}" >> unitree_entrypoint.bash \
 	&& echo "export UNITREE_SDK_VERSION=3_2" >> unitree_entrypoint.bash \
-	&& echo "export UNITREE_LEGGED_SDK_PATH='${PWD}unitree_legged_sdk'" >> unitree_entrypoint.bash \
 	&& echo "export ROS_IP='127.0.0.1'" >> unitree_entrypoint.bash \
-	&& case $(uname -m) in \
-			x86_64) arch=amd64 ;; \
-			aarch64) arch=arm64 ;; \
-			arm) arch=arm32 ;; \
-			armv7l) arch=arm32 ;; \
-		esac \
-	&& echo "export UNITREE_PLATFORM='${arch}'" >> unitree_entrypoint.bash \
 	&& echo "\nexec \$@" >> unitree_entrypoint.bash \
 	&& chmod +x unitree_entrypoint.bash
 
-# Setup workspace and unitree_ros
-RUN mkdir -p /root/catkin_ws/src/ \
-	&& cd /root/catkin_ws/src/ \
+# Setup unitree packages
+
+COPY ./patches /root/patches
+
+RUN mkdir -p /root/unitree_ws/src/ \
+	&& cd /root/unitree_ws/src/ \
+	&& git clone https://github.com/unitreerobotics/unitree_legged_sdk.git --branch v3.2 \
+	&& cd unitree_legged_sdk \
+	&& git apply /root/patches/unitree_legged_sdk.patch \
+	&& cd .. \
 	&& git clone https://github.com/unitreerobotics/unitree_ros.git \
 	&& cd unitree_ros \
+	&& git apply /root/patches/unitree_ros.patch \
 	&& sed -i "s|/home/[^/]\+/|$HOME/|g" unitree_gazebo/worlds/stairs.world \
+	&& cd .. \
+	&& git clone https://github.com/unitreerobotics/unitree_ros_to_real.git \
+	&& cd unitree_ros_to_real \
+	&& git checkout v3.2.1 \
+	&& git apply /root/patches/unitree_ros_to_real.patch \
+	&& cd /root/unitree_ws \
+	&& bash \
+	&& /unitree_entrypoint.bash catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic install \
+	&& rm -rf devel build /root/patches \
+	&& mkdir -p /root/catkin_ws/src \
 	&& cd /root/catkin_ws \
-	&& bash  \
+	&& bash \
 	&& /unitree_entrypoint.bash catkin_make
 
 # Setup stage 2 entrypoint

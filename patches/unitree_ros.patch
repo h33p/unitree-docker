@@ -1,0 +1,207 @@
+diff --git a/robots/a1_description/CMakeLists.txt b/robots/a1_description/CMakeLists.txt
+index 2dfe747..2891141 100644
+--- a/robots/a1_description/CMakeLists.txt
++++ b/robots/a1_description/CMakeLists.txt
+@@ -17,3 +17,29 @@ include_directories(
+     ${Boost_INCLUDE_DIR}
+     ${catkin_INCLUDE_DIRS}
+ )
++
++## Mark other files for installation (e.g. launch and bag files, etc.)
++install(DIRECTORY
++  launch
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
++)
++
++install(DIRECTORY
++  config
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
++)
++
++install(DIRECTORY
++  meshes
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
++)
++
++install(DIRECTORY
++  urdf
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
++)
++
++install(DIRECTORY
++  xacro
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
++)
+diff --git a/robots/aliengo_description/CMakeLists.txt b/robots/aliengo_description/CMakeLists.txt
+index 5a16abd..842cffa 100644
+--- a/robots/aliengo_description/CMakeLists.txt
++++ b/robots/aliengo_description/CMakeLists.txt
+@@ -17,3 +17,29 @@ include_directories(
+     ${Boost_INCLUDE_DIR}
+     ${catkin_INCLUDE_DIRS}
+ )
++
++## Mark other files for installation (e.g. launch and bag files, etc.)
++install(DIRECTORY
++  launch
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
++)
++
++install(DIRECTORY
++  config
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
++)
++
++install(DIRECTORY
++  meshes
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
++)
++
++install(DIRECTORY
++  urdf
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
++)
++
++install(DIRECTORY
++  xacro
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
++)
+diff --git a/robots/go1_description/CMakeLists.txt b/robots/go1_description/CMakeLists.txt
+index 2b43b95..006a8c1 100644
+--- a/robots/go1_description/CMakeLists.txt
++++ b/robots/go1_description/CMakeLists.txt
+@@ -17,3 +17,29 @@ include_directories(
+     ${Boost_INCLUDE_DIR}
+     ${catkin_INCLUDE_DIRS}
+ )
++
++## Mark other files for installation (e.g. launch and bag files, etc.)
++install(DIRECTORY
++  launch
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
++)
++
++install(DIRECTORY
++  config
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
++)
++
++install(DIRECTORY
++  meshes
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
++)
++
++install(DIRECTORY
++  urdf
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
++)
++
++install(DIRECTORY
++  xacro
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
++)
+diff --git a/robots/laikago_description/CMakeLists.txt b/robots/laikago_description/CMakeLists.txt
+index 8ef2357..8794441 100644
+--- a/robots/laikago_description/CMakeLists.txt
++++ b/robots/laikago_description/CMakeLists.txt
+@@ -17,3 +17,29 @@ include_directories(
+     ${Boost_INCLUDE_DIR}
+     ${catkin_INCLUDE_DIRS}
+ )
++
++## Mark other files for installation (e.g. launch and bag files, etc.)
++install(DIRECTORY
++  launch
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
++)
++
++install(DIRECTORY
++  config
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
++)
++
++install(DIRECTORY
++  meshes
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
++)
++
++install(DIRECTORY
++  urdf
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
++)
++
++install(DIRECTORY
++  xacro
++  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
++)
+diff --git a/unitree_controller/CMakeLists.txt b/unitree_controller/CMakeLists.txt
+index 88a30cc..3c296cc 100644
+--- a/unitree_controller/CMakeLists.txt
++++ b/unitree_controller/CMakeLists.txt
+@@ -55,4 +55,16 @@ add_executable(unitree_servo src/servo.cpp)
+ target_link_libraries(unitree_servo ${PROJECT_NAME} ${catkin_LIBRARIES})
+ 
+ add_executable(unitree_move_kinetic src/move_publisher.cpp)
+-target_link_libraries(unitree_move_kinetic ${catkin_LIBRARIES})
+\ No newline at end of file
++target_link_libraries(unitree_move_kinetic ${catkin_LIBRARIES})
++
++install(TARGETS ${PROJECT_NAME} unitree_external_force unitree_servo unitree_move_kinetic
++  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
++)
++
++install(DIRECTORY include/${PROJECT_NAME}/
++  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
++  FILES_MATCHING PATTERN "*.h"
++)
++
+diff --git a/unitree_gazebo/CMakeLists.txt b/unitree_gazebo/CMakeLists.txt
+index d0750a2..6ce2b07 100644
+--- a/unitree_gazebo/CMakeLists.txt
++++ b/unitree_gazebo/CMakeLists.txt
+@@ -54,4 +54,8 @@ target_link_libraries(unitreeDrawForcePlugin ${catkin_LIBRARIES} ${GAZEBO_LIBRAR
+ # add_executable(unitree_servo src/exe/servo.cpp)
+ # target_link_libraries(unitree_servo ${PROJECT_NAME} ${catkin_LIBRARIES})
+ 
+-
++install(TARGETS unitreeFootContactPlugin unitreeDrawForcePlugin
++  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
++)
+diff --git a/unitree_legged_control/CMakeLists.txt b/unitree_legged_control/CMakeLists.txt
+index 917bb91..890011b 100644
+--- a/unitree_legged_control/CMakeLists.txt
++++ b/unitree_legged_control/CMakeLists.txt
+@@ -29,4 +29,28 @@ add_library( unitree_legged_control
+     src/joint_controller.cpp
+ )
+ add_dependencies(${PROJECT_NAME} unitree_legged_msgs_gencpp)
+-target_link_libraries(unitree_legged_control ${catkin_LIBRARIES} unitree_joint_control_tool)
++
++if("${CMAKE_SYSTEM_PROCESSOR}" MATCHES "x86_64.*")
++	set(SUFF)
++else()
++	set(SUFF _arm64)
++endif()
++
++
++target_link_libraries(unitree_legged_control ${catkin_LIBRARIES} unitree_joint_control_tool${SUFF})
++
++install(TARGETS unitree_legged_control
++  ARCHIVE DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
++)
++
++install(DIRECTORY include/${PROJECT_NAME}/
++  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
++  FILES_MATCHING PATTERN "*.h"
++)
++
++install(FILES lib/libunitree_joint_control_tool${SUFF}.so
++	DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}"
++	RENAME libunitree_joint_control_tool.so
++)
