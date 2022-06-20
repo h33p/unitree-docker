@@ -33,32 +33,21 @@ RUN echo "#!/bin/bash" > unitree_entrypoint.bash \
 	&& echo "export LD_LIBRARY_PATH=/root/catkin_ws/devel/lib:/usr/local/lib:\${LD_LIBRARY_PATH}" >> unitree_entrypoint.bash \
 	&& echo "export UNITREE_SDK_VERSION=3_2" >> unitree_entrypoint.bash \
 	&& echo "export ROS_IP='127.0.0.1'" >> unitree_entrypoint.bash \
-	&& echo "\nexec \$@" >> unitree_entrypoint.bash \
+	&& echo "\nexec \"\$@\"" >> unitree_entrypoint.bash \
 	&& chmod +x unitree_entrypoint.bash
 
 # Setup unitree packages
 
 COPY ./patches /root/patches
+COPY ./setup_repos.sh /root/setup_repos.sh
 
 RUN mkdir -p /root/unitree_ws/src/ \
 	&& cd /root/unitree_ws/src/ \
-	&& git clone https://github.com/unitreerobotics/unitree_legged_sdk.git --branch v3.2 \
-	&& cd unitree_legged_sdk \
-	&& git apply /root/patches/unitree_legged_sdk.patch \
-	&& cd .. \
-	&& git clone https://github.com/unitreerobotics/unitree_ros.git \
-	&& cd unitree_ros \
-	&& git apply /root/patches/unitree_ros.patch \
-	&& sed -i "s|/home/[^/]\+/|$HOME/|g" unitree_gazebo/worlds/stairs.world \
-	&& cd .. \
-	&& git clone https://github.com/unitreerobotics/unitree_ros_to_real.git \
-	&& cd unitree_ros_to_real \
-	&& git checkout v3.2.1 \
-	&& git apply /root/patches/unitree_ros_to_real.patch \
+	&& /root/setup_repos.sh . /root/patches \
 	&& cd /root/unitree_ws \
 	&& bash \
 	&& /unitree_entrypoint.bash catkin_make -DCMAKE_INSTALL_PREFIX=/opt/ros/melodic install \
-	&& rm -rf devel build /root/patches \
+	&& rm -rf devel build /root/patches /root/setup_repos.sh \
 	&& mkdir -p /root/catkin_ws/src \
 	&& cd /root/catkin_ws \
 	&& bash \
@@ -67,12 +56,12 @@ RUN mkdir -p /root/unitree_ws/src/ \
 # Setup stage 2 entrypoint
 RUN echo "#!/bin/bash" >> entry2.bash \
 	&& echo "source /root/catkin_ws/devel/setup.bash" >> entry2.bash \
-	&& echo "exec \$@" >> entry2.bash \
+	&& echo "exec \"\$@\"" >> entry2.bash \
 	&& chmod +x entry2.bash
 
 # Setup joint entrypoint
 RUN echo "#!/bin/bash" >> entrypoint.bash \
-	&& echo "exec /unitree_entrypoint.bash /entry2.bash \$@" >> entrypoint.bash \
+	&& echo "exec /unitree_entrypoint.bash /entry2.bash \"\$@\"" >> entrypoint.bash \
 	&& chmod +x entrypoint.bash
 
 ENTRYPOINT ["/entrypoint.bash"]

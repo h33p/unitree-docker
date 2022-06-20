@@ -11,6 +11,7 @@ index 24b9c50..50103e0 100644
 +catkin_package(
 +   INCLUDE_DIRS include
 +   LIBRARIES unitree_legged_sdk lcm
++   DEPENDS lcm
 +)
  
 -link_directories(lib)
@@ -98,13 +99,12 @@ index 24b9c50..50103e0 100644
 +  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 +  FILES_MATCHING PATTERN "*.h"
 +)
-+
 diff --git a/package.xml b/package.xml
 new file mode 100644
 index 0000000..6b82690
 --- /dev/null
 +++ b/package.xml
-@@ -0,0 +1,12 @@
+@@ -0,0 +1,13 @@
 +<?xml version="1.0"?>
 +<package format="2">
 +  <name>unitree_legged_sdk</name>
@@ -115,5 +115,6 @@ index 0000000..6b82690
 +  <license>TODO</license>
 +
 +  <buildtool_depend>catkin</buildtool_depend>
++  <depend>lcm</depend>
 +
 +</package>

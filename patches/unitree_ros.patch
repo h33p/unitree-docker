@@ -1,5 +1,5 @@
 diff --git a/robots/a1_description/CMakeLists.txt b/robots/a1_description/CMakeLists.txt
-index 2dfe747..2891141 100644
+index 2dfe747..054869c 100644
 --- a/robots/a1_description/CMakeLists.txt
 +++ b/robots/a1_description/CMakeLists.txt
 @@ -17,3 +17,29 @@ include_directories(
@@ -9,31 +9,31 @@ index 2dfe747..2891141 100644
 +
 +## Mark other files for installation (e.g. launch and bag files, etc.)
 +install(DIRECTORY
-+  launch
++  launch/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 +)
 +
 +install(DIRECTORY
-+  config
++  config/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 +)
 +
 +install(DIRECTORY
-+  meshes
++  meshes/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
 +)
 +
 +install(DIRECTORY
-+  urdf
++  urdf/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
 +)
 +
 +install(DIRECTORY
-+  xacro
++  xacro/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
 +)
 diff --git a/robots/aliengo_description/CMakeLists.txt b/robots/aliengo_description/CMakeLists.txt
-index 5a16abd..842cffa 100644
+index 5a16abd..9b1ca51 100644
 --- a/robots/aliengo_description/CMakeLists.txt
 +++ b/robots/aliengo_description/CMakeLists.txt
 @@ -17,3 +17,29 @@ include_directories(
@@ -43,31 +43,31 @@ index 5a16abd..842cffa 100644
 +
 +## Mark other files for installation (e.g. launch and bag files, etc.)
 +install(DIRECTORY
-+  launch
++  launch/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 +)
 +
 +install(DIRECTORY
-+  config
++  config/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 +)
 +
 +install(DIRECTORY
-+  meshes
++  meshes/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
 +)
 +
 +install(DIRECTORY
-+  urdf
++  urdf/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
 +)
 +
 +install(DIRECTORY
-+  xacro
++  xacro/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
 +)
 diff --git a/robots/go1_description/CMakeLists.txt b/robots/go1_description/CMakeLists.txt
-index 2b43b95..006a8c1 100644
+index 2b43b95..3f22701 100644
 --- a/robots/go1_description/CMakeLists.txt
 +++ b/robots/go1_description/CMakeLists.txt
 @@ -17,3 +17,29 @@ include_directories(
@@ -77,31 +77,31 @@ index 2b43b95..006a8c1 100644
 +
 +## Mark other files for installation (e.g. launch and bag files, etc.)
 +install(DIRECTORY
-+  launch
++  launch/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 +)
 +
 +install(DIRECTORY
-+  config
++  config/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 +)
 +
 +install(DIRECTORY
-+  meshes
++  meshes/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
 +)
 +
 +install(DIRECTORY
-+  urdf
++  urdf/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
 +)
 +
 +install(DIRECTORY
-+  xacro
++  xacro/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
 +)
 diff --git a/robots/laikago_description/CMakeLists.txt b/robots/laikago_description/CMakeLists.txt
-index 8ef2357..8794441 100644
+index 8ef2357..968068d 100644
 --- a/robots/laikago_description/CMakeLists.txt
 +++ b/robots/laikago_description/CMakeLists.txt
 @@ -17,3 +17,29 @@ include_directories(
@@ -111,34 +111,34 @@ index 8ef2357..8794441 100644
 +
 +## Mark other files for installation (e.g. launch and bag files, etc.)
 +install(DIRECTORY
-+  launch
++  launch/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/launch
 +)
 +
 +install(DIRECTORY
-+  config
++  config/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/config
 +)
 +
 +install(DIRECTORY
-+  meshes
++  meshes/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/meshes
 +)
 +
 +install(DIRECTORY
-+  urdf
++  urdf/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/urdf
 +)
 +
 +install(DIRECTORY
-+  xacro
++  xacro/
 +  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}/xacro
 +)
 diff --git a/unitree_controller/CMakeLists.txt b/unitree_controller/CMakeLists.txt
 index 88a30cc..3c296cc 100644
 --- a/unitree_controller/CMakeLists.txt
 +++ b/unitree_controller/CMakeLists.txt
-@@ -55,4 +55,16 @@ add_executable(unitree_servo src/servo.cpp)
+@@ -55,4 +55,15 @@ add_executable(unitree_servo src/servo.cpp)
  target_link_libraries(unitree_servo ${PROJECT_NAME} ${catkin_LIBRARIES})
  
  add_executable(unitree_move_kinetic src/move_publisher.cpp)
@@ -156,7 +156,18 @@ index 88a30cc..3c296cc 100644
 +  DESTINATION ${CATKIN_PACKAGE_INCLUDE_DESTINATION}
 +  FILES_MATCHING PATTERN "*.h"
 +)
-+
+diff --git a/unitree_controller/package.xml b/unitree_controller/package.xml
+index cf01e7b..05147e1 100644
+--- a/unitree_controller/package.xml
++++ b/unitree_controller/package.xml
+@@ -14,6 +14,7 @@
+     <build_depend>robot_state_publisher</build_depend>
+     <build_depend>roscpp</build_depend>
+     <build_depend>std_msgs</build_depend>
++    <build_depend>gazebo_ros</build_depend>
+     <build_export_depend>controller_manager</build_export_depend>
+     <build_export_depend>joint_state_controller</build_export_depend>
+     <build_export_depend>robot_state_publisher</build_export_depend>
 diff --git a/unitree_gazebo/CMakeLists.txt b/unitree_gazebo/CMakeLists.txt
 index d0750a2..6ce2b07 100644
 --- a/unitree_gazebo/CMakeLists.txt
@@ -171,11 +182,31 @@ index d0750a2..6ce2b07 100644
 +  LIBRARY DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
 +  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 +)
+diff --git a/unitree_gazebo/package.xml b/unitree_gazebo/package.xml
+index c1823d3..65c58db 100644
+--- a/unitree_gazebo/package.xml
++++ b/unitree_gazebo/package.xml
+@@ -14,6 +14,7 @@
+     <build_depend>robot_state_publisher</build_depend>
+     <build_depend>roscpp</build_depend>
+     <build_depend>std_msgs</build_depend>
++    <build_depend>gazebo_ros</build_depend>
+     <build_export_depend>controller_manager</build_export_depend>
+     <build_export_depend>joint_state_controller</build_export_depend>
+     <build_export_depend>robot_state_publisher</build_export_depend>
 diff --git a/unitree_legged_control/CMakeLists.txt b/unitree_legged_control/CMakeLists.txt
-index 917bb91..890011b 100644
+index 917bb91..caa115c 100644
 --- a/unitree_legged_control/CMakeLists.txt
 +++ b/unitree_legged_control/CMakeLists.txt
-@@ -29,4 +29,28 @@ add_library( unitree_legged_control
+@@ -5,6 +5,7 @@ find_package(catkin REQUIRED COMPONENTS
+     controller_interface
+     hardware_interface
+     pluginlib
++    control_toolbox
+     roscpp
+     realtime_tools
+     unitree_legged_msgs
+@@ -29,4 +30,31 @@ add_library( unitree_legged_control
      src/joint_controller.cpp
  )
  add_dependencies(${PROJECT_NAME} unitree_legged_msgs_gencpp)
@@ -201,7 +232,29 @@ index 917bb91..890011b 100644
 +  FILES_MATCHING PATTERN "*.h"
 +)
 +
-+install(FILES lib/libunitree_joint_control_tool${SUFF}.so
-+	DESTINATION "${CATKIN_PACKAGE_LIB_DESTINATION}"
-+	RENAME libunitree_joint_control_tool.so
++install(FILES unitree_controller_plugins.xml
++	DESTINATION "${CATKIN_PACKAGE_SHARE_DESTINATION}"
 +)
++
++install(FILES lib/libunitree_joint_control_tool${SUFF}.so
++	DESTINATION ${CATKIN_PACKAGE_LIB_DESTINATION}
++)
+diff --git a/unitree_legged_control/package.xml b/unitree_legged_control/package.xml
+index 16358dc..1df9ee8 100644
+--- a/unitree_legged_control/package.xml
++++ b/unitree_legged_control/package.xml
+@@ -7,6 +7,7 @@
+     <license>TODO</license>
+     <buildtool_depend>catkin</buildtool_depend>
+     <build_depend>controller_interface</build_depend>
++    <build_depend>control_toolbox</build_depend>
+     <build_depend>hardware_interface</build_depend>
+     <build_depend>pluginlib</build_depend>
+     <build_depend>roscpp</build_depend>
+@@ -24,4 +25,4 @@
+         <!-- Other tools can request additional information be placed here -->
+         <controller_interface plugin="${prefix}/unitree_controller_plugins.xml"/>
+     </export>
+-</package>
+\ No newline at end of file
++</package>

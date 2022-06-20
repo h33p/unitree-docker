@@ -87,18 +87,17 @@ diff --git a/unitree_legged_real/package.xml b/unitree_legged_real/package.xml
 index 68c09e5..8c39503 100644
 --- a/unitree_legged_real/package.xml
 +++ b/unitree_legged_real/package.xml
-@@ -8,13 +8,16 @@
+@@ -8,13 +8,15 @@
    <license>TODO</license>
  
    <buildtool_depend>catkin</buildtool_depend>
-+  <build_depend>unitree_legged_sdk</build_depend>
    <build_depend>roscpp</build_depend>
    <build_depend>std_msgs</build_depend>
    <build_export_depend>roscpp</build_export_depend>
    <build_export_depend>std_msgs</build_export_depend>
    <exec_depend>roscpp</exec_depend>
    <exec_depend>std_msgs</exec_depend>
-+  <exec_depend>unitree_legged_sdk</exec_depend>
++  <depend>unitree_legged_sdk</depend>
    <depend>unitree_legged_msgs</depend>
 +  <depend>geometry_msgs</depend>
    <depend>eigen</depend>
